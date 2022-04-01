@@ -4,118 +4,172 @@ import SnapKit
 
 class MainViewController: UIViewController {
     
-    lazy var stackView = UIStackView()
-    lazy var backButton = UIButton()
-    lazy var nextButton = UIButton()
-    lazy var searchField = UITextField()
-    lazy var webKitView = WKWebView()
+    lazy var urlRequest:URLRequest = URLRequest(url: URL(string: "")!)
+    lazy var progressView = UIProgressView(progressViewStyle: .default)
+    private var estimatedProgressObserver: NSKeyValueObservation?
     
     override func loadView() {
         super.loadView()
-        setUpWebKit()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         configureView()
-       
-       
+        didPullToRefresh()
+        setupEstimatedProgressObserver()
+        
+        let backB = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: webKitView, action: nil)
+        let share = UIBarButtonItem(barButtonSystemItem: .fastForward, target: webKitView, action: #selector(presentShareSheet))
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let refresher = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(webKitView.reload))
+        
+        toolbarItems = [backB, share, spacer, refresher]
+        navigationController?.isToolbarHidden = false
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//    }
-    
-    func setUpWebKit() {
+    @objc private func presentShareSheet() {
+        let url = urlRequest
         
-        let url = Constants.url
-        guard let url = url else {
-            return
+        let shareSheet = UIActivityViewController(activityItems: [url],
+                                                  applicationActivities: nil)
+        present(shareSheet, animated: true)
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+        
+        let urlString:String = "https://www.youtube.com/"
+        let url:URL = URL(string: urlString)!
+        urlRequest = URLRequest(url: url)
+        
+        webKitView.load(urlRequest)
+        searchField.text = urlString
+    }
+    
+    private func setupProgressView() {
+        guard let navigationBar = navigationController?.navigationBar else { return }
+        
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        navigationBar.addSubview(progressView)
+        
+        progressView.isHidden = true
+        
+        NSLayoutConstraint.activate([
+            progressView.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
+            
+            progressView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor),
+            progressView.heightAnchor.constraint(equalToConstant: 2.0)
+        ])
+    }
+    
+    private func setupEstimatedProgressObserver() {
+        estimatedProgressObserver = webKitView.observe(\.estimatedProgress, options: [.new]) { [weak self] webKitView, _ in
+            self?.progressView.progress = Float(webKitView.estimatedProgress)
         }
-        webKitView.load(URLRequest(url: url))
-        webKitView.allowsBackForwardNavigationGestures = true
-        webKitView.allowsLinkPreview = true
-        
     }
     
-    func configureView() {
-        configureStackView()
-        configureBackButton()
-        configureWebKitView()
-        configureNextButton()
-        configureSearchField()
-    }
-    
-    func configureStackView() {
-        view.addSubview(stackView)
+    lazy var stackView: UIStackView = {
+        var stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .center
-        
-        stackView.snp.makeConstraints({make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            make.right.equalTo(view).inset(20)
-            make.left.equalTo(view).offset(20)
-            make.height.equalTo(50)
-//            make.width.equalTo(300)
-            
-        })
-    }
+        return stackView
+    }()
     
-    func configureBackButton() {
-        stackView.addSubview(backButton)
+    lazy var backButton: UIButton = {
+        var backButton = UIButton()
         backButton.setTitle("Back", for: .normal)
         backButton.setTitleColor(.black, for: .normal)
         backButton.isEnabled = false
-        
-        backButton.snp.makeConstraints({make in
-            make.left.top.equalTo(stackView)
-            make.width.equalTo(40)
-            make.height.equalTo(stackView.snp.height)
-        })
-    }
+        backButton.addTarget(self, action: #selector(backButtonClicked), for: .touchUpInside)
+        return backButton
+    }()
     
-    func configureSearchField() {
-        stackView.addSubview(searchField)
+    
+    lazy var nextButton: UIButton = {
+        var nextButton = UIButton()
+        nextButton.setTitle("Next", for: .normal)
+        nextButton.setTitleColor(.black, for: .normal)
+        nextButton.isEnabled = false
+        nextButton.addTarget(self, action: #selector(nextButtonCliked), for: .touchUpInside)
+        return nextButton
+    }()
+    
+    lazy var searchField: UITextField = {
+        var searchField = UITextField()
         searchField.placeholder = "Type here to search..."
         searchField.isUserInteractionEnabled = true
         searchField.layer.borderColor = UIColor.lightGray.cgColor
         searchField.layer.borderWidth = 0.5
-        
-        searchField.snp.makeConstraints({make in
-            make.left.equalTo(backButton.snp.right).offset(10)
-            make.center.equalTo(stackView.snp.center)
-            make.top.equalTo(stackView)
-            make.height.equalTo(stackView.snp.height)
-            
-        })
+        searchField.delegate = self
+        searchField.autocapitalizationType = .none
+        searchField.autocorrectionType = .no
+        searchField.layer.cornerRadius = 10
+        searchField.textAlignment = .center
+        return searchField
+    }()
+    
+    lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.autoresizingMask = .flexibleHeight
+        scrollView.bounces = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        var activityIndicator = UIActivityIndicatorView()
+        return activityIndicator
+    }()
+    
+    lazy var contentView: UIView = {
+        var contentView = UIView()
+        return contentView
+    }()
+    
+    lazy var webKitView: WKWebView = {
+        var webKitView = WKWebView()
+        webKitView.addSubview(activityIndicator)
+        webKitView.allowsBackForwardNavigationGestures = true
+        webKitView.allowsLinkPreview = true
+        webKitView.navigationDelegate = self
+        self.activityIndicator.startAnimating()
+        self.activityIndicator.hidesWhenStopped = true
+        return webKitView
+    }()
+    
+    @objc func backButtonClicked() {
+        if webKitView.canGoBack {
+            webKitView.goBack()
+        }
     }
     
-    func configureNextButton() {
-        stackView.addSubview(nextButton)
-        nextButton.setTitle("Next", for: .normal)
-        nextButton.setTitleColor(.black, for: .normal)
-        nextButton.isEnabled = false
-        
-        nextButton.snp.makeConstraints({make in
-            make.right.top.equalTo(stackView)
-            make.height.equalTo(stackView.snp.height)
-        })
+    @objc func nextButtonCliked() {
+        if webKitView.canGoForward {
+            webKitView.goForward()
+        }
     }
     
-    func configureWebKitView() {
-
-        view.addSubview(webKitView)
-        webKitView.snp.makeConstraints({ make in
-            make.top.equalTo(stackView.snp.bottom).offset(5)
-            make.left.equalTo(view).offset(20)
-            make.right.equalTo(view).inset(20)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        })
+    func didPullToRefresh() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(reloadWebView(_:)), for: .valueChanged)
+        webKitView.scrollView.addSubview(refreshControl)
     }
     
+    @objc func reloadWebView(_ sender: UIRefreshControl) {
+        sender.beginRefreshing()
+        self.webKitView.reload()
+        self.refreshDidStop(sender)
+    }
+    
+    func refreshDidStop(_ sender: UIRefreshControl) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            sender.endRefreshing()
+        })
+    }
 }
-
-
 
