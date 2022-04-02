@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 import SnapKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var urlRequest:URLRequest = URLRequest(url: URL(string: "")!)
     lazy var progressView = UIProgressView(progressViewStyle: .default)
@@ -18,24 +18,25 @@ class MainViewController: UIViewController {
         configureView()
         didPullToRefresh()
         setupEstimatedProgressObserver()
+        scrollView.delegate = self
         
-        let backB = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: webKitView, action: nil)
-        let share = UIBarButtonItem(barButtonSystemItem: .fastForward, target: webKitView, action: #selector(presentShareSheet))
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let refresher = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(webKitView.reload))
+        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: webKitView, action: nil)
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: webKitView, action: #selector(presentShareSheet))
+        let spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(webKitView.reload))
         
-        toolbarItems = [backB, share, spacer, refresher]
+        _ = UIToolbar()
+        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton]
         navigationController?.isToolbarHidden = false
+        
     }
     
     @objc private func presentShareSheet() {
-        let url = urlRequest
-        
-        let shareSheet = UIActivityViewController(activityItems: [url],
-                                                  applicationActivities: nil)
-        present(shareSheet, animated: true)
+        guard let data = URL(string: "https:www.zoho.com") else { return }
+        let av = UIActivityViewController(activityItems: [data], applicationActivities: nil)
+
+        present(av, animated: true, completion: nil)
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
