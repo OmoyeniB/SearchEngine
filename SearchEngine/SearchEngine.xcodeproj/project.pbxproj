@@ -19,7 +19,10 @@
 		B452DA0527F696A000889056 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0427F696A000889056 /* Constants.swift */; };
 		B452DA0827F699A500889056 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B452DA0727F699A500889056 /* IQKeyboardManagerSwift */; };
 		B452DA0A27F7388600889056 /* MainViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0927F7388600889056 /* MainViewController+Extensions.swift */; };
-		B452DA0C27F7BB0B00889056 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0B27F7BB0A00889056 /* MainViewModel.swift */; };
+		B452DA0C27F7BB0B00889056 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0B27F7BB0A00889056 /* DataModel.swift */; };
+		B452DA0E27F7CD1800889056 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0D27F7CD1800889056 /* NetworkService.swift */; };
+		B452DA1027F7CE0B00889056 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0F27F7CE0B00889056 /* AppError.swift */; };
+		B452DA1227F7D01500889056 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1127F7D01500889056 /* String+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +38,10 @@
 		B452DA0227F67EA800889056 /* MainViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCoordinator.swift; sourceTree = "<group>"; };
 		B452DA0427F696A000889056 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B452DA0927F7388600889056 /* MainViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Extensions.swift"; sourceTree = "<group>"; };
-		B452DA0B27F7BB0A00889056 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		B452DA0B27F7BB0A00889056 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		B452DA0D27F7CD1800889056 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		B452DA0F27F7CE0B00889056 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		B452DA1127F7D01500889056 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +93,9 @@
 			isa = PBXGroup;
 			children = (
 				B452DA0427F696A000889056 /* Constants.swift */,
+				B452DA0D27F7CD1800889056 /* NetworkService.swift */,
+				B452DA0F27F7CE0B00889056 /* AppError.swift */,
+				B452DA1127F7D01500889056 /* String+Extension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -113,7 +122,7 @@
 		B452D9F727F67DC800889056 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B452DA0B27F7BB0A00889056 /* MainViewModel.swift */,
+				B452DA0B27F7BB0A00889056 /* DataModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -224,11 +233,14 @@
 				B452D9E527F67D3600889056 /* MainViewController.swift in Sources */,
 				B452D9E127F67D3600889056 /* AppDelegate.swift in Sources */,
 				B452DA0027F67E7800889056 /* MainCoordinator.swift in Sources */,
+				B452DA1227F7D01500889056 /* String+Extension.swift in Sources */,
 				B452DA0527F696A000889056 /* Constants.swift in Sources */,
 				B452DA0A27F7388600889056 /* MainViewController+Extensions.swift in Sources */,
 				B452DA0327F67EA800889056 /* MainViewCoordinator.swift in Sources */,
 				B452D9E327F67D3600889056 /* SceneDelegate.swift in Sources */,
-				B452DA0C27F7BB0B00889056 /* MainViewModel.swift in Sources */,
+				B452DA1027F7CE0B00889056 /* AppError.swift in Sources */,
+				B452DA0E27F7CD1800889056 /* NetworkService.swift in Sources */,
+				B452DA0C27F7BB0B00889056 /* DataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
