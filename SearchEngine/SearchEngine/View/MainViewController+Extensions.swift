@@ -4,13 +4,14 @@ import WebKit
 extension MainViewController {
     
     func configureView() {
+        view.backgroundColor = .systemBackground
         view.addSubview(stackView)
-        stackView.addSubview(backButton)
-        stackView.addSubview(nextButton)
-        stackView.addSubview(searchField)
         view.addSubview(progressView)
         view.addSubview(scrollView)
         view.addSubview(contentView)
+        stackView.addSubview(backButton)
+        stackView.addSubview(nextButton)
+        stackView.addSubview(searchBar)
         contentView.addSubview(webKitView)
         
         configureStackView()
@@ -21,6 +22,13 @@ extension MainViewController {
         configureScrollView()
         configureWebKitView()
         configureContentView()
+    }
+    
+    func modelsToModifyView() {
+        didPullToRefresh()
+        setupEstimatedProgressObserver()
+        configureSearchbarController()
+        createToolBarItems()
     }
     
     
@@ -34,7 +42,6 @@ extension MainViewController {
     }
     
     func configureProgressBar() {
-        
         progressView.isHidden = true
         progressView.snp.makeConstraints({ make in
             make.top.equalTo(stackView.snp.bottom).offset(5)
@@ -59,7 +66,7 @@ extension MainViewController {
     }
     
     func configureSearchField() {
-        searchField.snp.makeConstraints({make in
+        searchBar.snp.makeConstraints({make in
             make.left.equalTo(backButton.snp.right).offset(10)
             make.center.equalTo(stackView.snp.center)
             make.top.equalTo(stackView)
@@ -100,7 +107,7 @@ extension MainViewController: WKNavigationDelegate {
         self.activityIndicator.stopAnimating()
         backButton.isEnabled = webView.canGoBack
         nextButton.isEnabled = webView.canGoForward
-        searchField.text = webView.url?.absoluteString
+        searchBar.text = webView.url?.absoluteString
         UIView.animate(withDuration: 0.33,
                        animations: {
             self.progressView.alpha = 0.0
@@ -127,26 +134,33 @@ extension MainViewController: WKNavigationDelegate {
     }
 }
 
-extension MainViewController: UITextFieldDelegate {
+extension MainViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text?.replacingOccurrences(of: " ", with: ""), !text.isEmpty else {
+            return
+        }
+        
+        let baseString = Constants.SearchString.baseString
+        var url = Constants.SearchString.baseUrl
+        let searchQuery = Constants.SearchString.searchQuery
+        let dotcom = Constants.SearchString.dotCom
+//        let dotorg = Constants.SearchString.dotOrg
+//        let dotnet = Constants.SearchString.dotNet
+        if text.contains(baseString) {
+            url = text
+        } else if
+            (!text.contains(baseString) && text.contains(dotcom)) {
+            url = baseString + text
+        } else if
+            (!text.contains(baseString) && !text.contains(dotcom)) {
+            url = searchQuery+text
+        }
+        self.fetchDataFromWebkit(urlString: url)
+    }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        
-        //        let urlString:String = Constants.url
-        //        guard let url:URL = URL(string: urlString) else {return false}
-        //        webKitView.load(URLRequest(url: url))
-        
-        let urlString: String = searchField.text!
-        let url:URL = URL(string: urlString)!
-        let urlRequest:URLRequest = URLRequest(url: url)
-        
-        webKitView.load(urlRequest)
-        webKitView.allowsBackForwardNavigationGestures = true
-        webKitView.allowsLinkPreview = true
-        
-        textField.resignFirstResponder()
-        
-        return true
+    
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+       print("click")
     }
 }
 

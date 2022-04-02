@@ -2,11 +2,14 @@ import UIKit
 import WebKit
 import SnapKit
 
-class MainViewController: UIViewController, UIScrollViewDelegate {
+class MainViewController: UIViewController, WKScriptMessageHandler  {
     
-    lazy var urlRequest:URLRequest = URLRequest(url: URL(string: "")!)
+    var dataModel: DataModel?
+    var timer: Timer?
+    lazy var urlRequest = "https://google.com"
     lazy var progressView = UIProgressView(progressViewStyle: .default)
     private var estimatedProgressObserver: NSKeyValueObservation?
+    let searchBar = UISearchBar()
     
     override func loadView() {
         super.loadView()
@@ -14,60 +17,47 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         configureView()
-        didPullToRefresh()
-        setupEstimatedProgressObserver()
-        scrollView.delegate = self
-        
-        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: webKitView, action: nil)
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: webKitView, action: #selector(presentShareSheet))
-        let spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(webKitView.reload))
-        
-        _ = UIToolbar()
-        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton]
-        navigationController?.isToolbarHidden = false
-        
-    }
-    
-    @objc private func presentShareSheet() {
-        guard let data = URL(string: "https:www.zoho.com") else { return }
-        let av = UIActivityViewController(activityItems: [data], applicationActivities: nil)
-
-        present(av, animated: true, completion: nil)
+        modelsToModifyView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+    }
+
+    func createToolBarItems() {
         
-        let urlString:String = "https://www.youtube.com/"
-        let url:URL = URL(string: urlString)!
-        urlRequest = URLRequest(url: url)
+        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: nil)
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: webKitView, action: #selector(userContentController(_:didReceive:)))
+        let spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(clickedToRefresh))
         
-        webKitView.load(urlRequest)
-        searchField.text = urlString
+        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton]
+        navigationController?.isToolbarHidden = false
     }
     
+    @objc func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        let dict = message.body as! [String:AnyObject]
+        let username = dict["username"] as! String
+        let secretToken = dict["secretToken"] as! String
+        
+        let av = UIActivityViewController(activityItems: [username, secretToken], applicationActivities: nil)
+        self.present(av, animated: true, completion: nil)
+    }
+                               
     private func setupProgressView() {
         guard let navigationBar = navigationController?.navigationBar else { return }
-        
-        progressView.translatesAutoresizingMaskIntoConstraints = false
-        navigationBar.addSubview(progressView)
-        
         progressView.isHidden = true
         
-        NSLayoutConstraint.activate([
-            progressView.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
-            progressView.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
-            
-            progressView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor),
-            progressView.heightAnchor.constraint(equalToConstant: 2.0)
-        ])
+        navigationBar.addSubview(progressView)
+        progressView.snp.makeConstraints{ make in
+            make.bottom.left.right.equalTo(navigationBar)
+            make.height.equalTo(2.0)
+        }
     }
     
-    private func setupEstimatedProgressObserver() {
+    func setupEstimatedProgressObserver() {
         estimatedProgressObserver = webKitView.observe(\.estimatedProgress, options: [.new]) { [weak self] webKitView, _ in
             self?.progressView.progress = Float(webKitView.estimatedProgress)
         }
@@ -77,41 +67,39 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         var stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .center
+        stackView.clipsToBounds = true
         return stackView
     }()
     
     lazy var backButton: UIButton = {
         var backButton = UIButton()
         backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(.black, for: .normal)
+        backButton.setTitleColor(.systemBlue, for: .normal)
         backButton.isEnabled = false
         backButton.addTarget(self, action: #selector(backButtonClicked), for: .touchUpInside)
         return backButton
     }()
     
-    
     lazy var nextButton: UIButton = {
         var nextButton = UIButton()
         nextButton.setTitle("Next", for: .normal)
-        nextButton.setTitleColor(.black, for: .normal)
+        nextButton.setTitleColor(.systemBlue, for: .normal)
         nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(nextButtonCliked), for: .touchUpInside)
         return nextButton
     }()
     
-    lazy var searchField: UITextField = {
-        var searchField = UITextField()
-        searchField.placeholder = "Type here to search..."
-        searchField.isUserInteractionEnabled = true
-        searchField.layer.borderColor = UIColor.lightGray.cgColor
-        searchField.layer.borderWidth = 0.5
-        searchField.delegate = self
-        searchField.autocapitalizationType = .none
-        searchField.autocorrectionType = .no
-        searchField.layer.cornerRadius = 10
-        searchField.textAlignment = .center
-        return searchField
-    }()
+    func configureSearchbarController() {
+        searchBar.backgroundColor = .red
+        searchBar.clipsToBounds = true
+        searchBar.autocapitalizationType = .none
+        searchBar.autocorrectionType = .no
+        searchBar.placeholder = Constants.MainViewStrings.searchBarplaceholder
+        searchBar.showsCancelButton = false
+        searchBar.delegate = self
+        searchBar.becomeFirstResponder()
+        searchBar.showsBookmarkButton = true
+    }
     
     lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
@@ -134,6 +122,15 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var webKitView: WKWebView = {
         var webKitView = WKWebView()
+        let prefrence = WKWebpagePreferences()
+        let userContentController = WKUserContentController()
+        prefrence.allowsContentJavaScript = true
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = userContentController
+        configuration.defaultWebpagePreferences = prefrence
+        userContentController.add(self, name: "userLogin")
+    
+//        self.webKitView.
         webKitView.addSubview(activityIndicator)
         webKitView.allowsBackForwardNavigationGestures = true
         webKitView.allowsLinkPreview = true
@@ -161,6 +158,10 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         webKitView.scrollView.addSubview(refreshControl)
     }
     
+    @objc func clickedToRefresh() {
+        webKitView.reload()
+    }
+    
     @objc func reloadWebView(_ sender: UIRefreshControl) {
         sender.beginRefreshing()
         self.webKitView.reload()
@@ -172,5 +173,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             sender.endRefreshing()
         })
     }
+    
+    func fetchDataFromWebkit(urlString: String) {
+        guard let url = URL(string: urlString) else {
+            return
+        }
+        webKitView.load(URLRequest(url: url))
+    }
 }
-
