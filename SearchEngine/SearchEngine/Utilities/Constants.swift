@@ -1,9 +1,25 @@
 import Foundation
 
 enum Constants {
-    static let url = "https://www.google.com/"
-    static let searchBarPlaceholder = "Type to search"
-    static let errorDecoding = "Response could not be decoded"
-    static let unkownError =  "Unknown error"
-    static let invalidUrl = "Please provide a valid URL"
+    
+    enum SearchString {
+        static let baseUrl = ""
+        static let baseString = "https://"
+        static let searchQuery = "https://www.google.com/search?q="
+        static let dotCom = ".com"
+        static let dotOrg = ".org"
+        static let dotNet = ".net"
+    }
+    
+    enum MainViewStrings {
+        static let searchBarplaceholder = "Type here to search..."
+    }
+    
+    enum PopUpAlertString {
+        static let popUpTitle = "Alert"
+        static let popUpActionTitles = "OK"
+        static let networkOutOfCoverage = "Oops!.. something went wrong. Please check your connection and try again"
+    }
+    
+    
 }
