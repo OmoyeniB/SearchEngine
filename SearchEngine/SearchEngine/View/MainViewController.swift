@@ -2,39 +2,76 @@ import UIKit
 import WebKit
 import SnapKit
 
-class MainViewController: UIViewController, WKScriptMessageHandler  {
+class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate  {
     
-    var dataModel: DataModel?
-    var timer: Timer?
-    lazy var urlRequest = "https://google.com"
     lazy var progressView = UIProgressView(progressViewStyle: .default)
     private var estimatedProgressObserver: NSKeyValueObservation?
     let searchBar = UISearchBar()
+    var savedBookmarks: [String] = []
+    
+//    func addBookmarks() {
+//        print("bookmarked")
+//    }
     
     override func loadView() {
         super.loadView()
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadBookmarks()
         configureView()
         modelsToModifyView()
+    
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+        self.activityIndicator.stopAnimating()
     }
-
+    
+    lazy var image: UIImageView = {
+        var image = UIImageView()
+        image.image = UIImage(named: "pip.fill")
+        return image
+    }()
+    
     func createToolBarItems() {
         
-        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: nil)
+        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(bookMarkButtonCliked))
         let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: webKitView, action: #selector(userContentController(_:didReceive:)))
         let spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(clickedToRefresh))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancleButtonTapped))
         
-        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton]
+        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton, spacerButton, cancelButton]
         navigationController?.isToolbarHidden = false
+    }
+    
+    @objc func cancleButtonTapped() {
+       navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func bookMarkButtonCliked() {
+        if let text = searchBar.searchTextField.text {
+            if !savedBookmarks.contains(text) && text.count > 0{
+                savedBookmarks.append(text)
+            }
+            
+        }
+        UserDefaults.standard.set(savedBookmarks, forKey: "bookmark")
+
+        let bookmark = BookMarkViewController()
+        let navigationController = UINavigationController(rootViewController: bookmark)
+        self.present(navigationController, animated: true, completion: nil)
+    }
+    
+    func loadBookmarks() {
+        if let bookmarks = UserDefaults.standard.object(forKey: "bookmark") as? [String] {
+            savedBookmarks = bookmarks
+        }
     }
     
     @objc func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -45,7 +82,7 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         let av = UIActivityViewController(activityItems: [username, secretToken], applicationActivities: nil)
         self.present(av, animated: true, completion: nil)
     }
-                               
+    
     private func setupProgressView() {
         guard let navigationBar = navigationController?.navigationBar else { return }
         progressView.isHidden = true
@@ -80,6 +117,18 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         return backButton
     }()
     
+    lazy var containerView: UIView = {
+        var containerView = UIView()
+       return containerView
+    }()
+    
+    lazy var bookMark: UIButton = {
+        var bookMark = UIButton()
+        bookMark.setImage(UIImage(systemName: "book"), for: .normal)
+        bookMark.addTarget(self, action: #selector(clickToAddToBookmark), for: .touchUpInside)
+        return bookMark
+    }()
+    
     lazy var nextButton: UIButton = {
         var nextButton = UIButton()
         nextButton.setTitle("Next", for: .normal)
@@ -89,8 +138,12 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         return nextButton
     }()
     
+    @objc func clickToAddToBookmark() {
+        print("added to bookmark")
+    }
+    
     func configureSearchbarController() {
-        searchBar.backgroundColor = .red
+        searchBar.sizeToFit()
         searchBar.clipsToBounds = true
         searchBar.autocapitalizationType = .none
         searchBar.autocorrectionType = .no
@@ -98,9 +151,16 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         searchBar.showsCancelButton = false
         searchBar.delegate = self
         searchBar.becomeFirstResponder()
-        searchBar.showsBookmarkButton = true
+//        searchBar.showsBookmarkButton = true
+//        searchBar.searchTextField.clearButtonMode = .never
+        searchBar.isTranslucent = true
+        
     }
     
+    lazy var imageStackView: UIStackView = {
+        var imageStackView = UIStackView()
+        return imageStackView
+    }()
     lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.autoresizingMask = .flexibleHeight
@@ -112,6 +172,7 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         var activityIndicator = UIActivityIndicatorView()
+        activityIndicator.stopAnimating()
         return activityIndicator
     }()
     
@@ -129,8 +190,8 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         configuration.userContentController = userContentController
         configuration.defaultWebpagePreferences = prefrence
         userContentController.add(self, name: "userLogin")
-    
-//        self.webKitView.
+        webKitView.uiDelegate = self
+        
         webKitView.addSubview(activityIndicator)
         webKitView.allowsBackForwardNavigationGestures = true
         webKitView.allowsLinkPreview = true
@@ -180,4 +241,8 @@ class MainViewController: UIViewController, WKScriptMessageHandler  {
         }
         webKitView.load(URLRequest(url: url))
     }
-}
+    
+        
+    }
+    
+

@@ -10,18 +10,25 @@ extension MainViewController {
         view.addSubview(scrollView)
         view.addSubview(contentView)
         stackView.addSubview(backButton)
-        stackView.addSubview(nextButton)
+        stackView.addSubview(containerView)
+        containerView.addSubview(nextButton)
+        containerView.addSubview(bookMark)
         stackView.addSubview(searchBar)
         contentView.addSubview(webKitView)
+        webKitView.addSubview(imageStackView)
         
         configureStackView()
         configureProgressBar()
         configureBackButton()
-        configureNextButton()
         configureSearchField()
+        configureContainerView()
+        configureNextButton()
+        configureBookMark()
         configureScrollView()
         configureWebKitView()
+        configureImageStackView()
         configureContentView()
+        
     }
     
     func modelsToModifyView() {
@@ -35,8 +42,8 @@ extension MainViewController {
     func configureStackView() {
         stackView.snp.makeConstraints({make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            make.right.equalTo(view).inset(15)
-            make.left.equalTo(view).offset(15)
+            make.right.equalTo(view).inset(10)
+            make.left.equalTo(view).offset(10)
             make.height.equalTo(50)
         })
     }
@@ -58,19 +65,39 @@ extension MainViewController {
         })
     }
     
+    func configureContainerView() {
+        containerView.snp.makeConstraints({make in
+            make.top.equalTo(stackView)
+            make.left.equalTo(searchBar.snp.right).offset(20)
+            make.right.equalTo(stackView).inset(10)
+            make.height.equalTo(stackView.snp.height)
+        })
+    }
+    
+    func configureBookMark() {
+        bookMark.snp.makeConstraints({ make in
+            make.left.equalTo(containerView)
+            make.top.equalTo(containerView)
+            make.height.equalTo(stackView.snp.height)
+//            make.width.equalTo(stackView.snp.height)
+        })
+    }
+    
     func configureNextButton() {
         nextButton.snp.makeConstraints({make in
-            make.right.top.equalTo(stackView)
+            make.top.equalTo(containerView)
+            make.left.equalTo(bookMark.snp.right).offset(5)
+            make.right.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
         })
     }
     
     func configureSearchField() {
         searchBar.snp.makeConstraints({make in
-            make.left.equalTo(backButton.snp.right).offset(10)
-            make.center.equalTo(stackView.snp.center)
+            make.left.equalTo(backButton.snp.right).offset(5)
             make.top.equalTo(stackView)
             make.height.equalTo(stackView.snp.height)
+            make.center.equalTo(stackView.snp.center).offset(-30)
         })
     }
     
@@ -96,6 +123,13 @@ extension MainViewController {
     func configureWebKitView() {
         webKitView.snp.makeConstraints({ make in
             make.edges.equalTo(contentView)
+        })
+    }
+    
+    func configureImageStackView() {
+        imageStackView.snp.makeConstraints({make in
+            make.centerY.equalTo(webKitView).offset(-200)
+            make.centerX.equalTo(webKitView)
         })
     }
     
@@ -131,7 +165,20 @@ extension MainViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.activityIndicator.stopAnimating()
+        displayError(error: error.localizedDescription)
     }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            if navigationAction.targetFrame == nil {
+                if let url = navigationAction.request.url {
+                    let app = UIApplication.shared
+                    if app.canOpenURL(url) {
+                        app.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            }
+            decisionHandler(.allow)
+        }
 }
 
 extension MainViewController: UISearchBarDelegate {
@@ -158,9 +205,25 @@ extension MainViewController: UISearchBarDelegate {
         self.fetchDataFromWebkit(urlString: url)
     }
     
-    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+            //cancel button becomes disabled when search bar isn't first responder, force it back enabled
+            DispatchQueue.main.async {
+                if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+                    cancelButton.isEnabled = true
+                }
+            }
+            return true
+        }
+
+//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//            self.present(UINavigationController(rootViewController: SearchViewController()), animated: false, completion: nil)
+//        }
+
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-       print("click")
+       print("link has been added to bookMark successfully")
+        
     }
+    
+   
 }
 
