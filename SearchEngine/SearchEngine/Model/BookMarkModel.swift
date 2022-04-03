@@ -1,5 +1,5 @@
 import Foundation
 
-struct DataModel: Codable {
+struct BookMarkModel: Codable {
     var url: String?
 }

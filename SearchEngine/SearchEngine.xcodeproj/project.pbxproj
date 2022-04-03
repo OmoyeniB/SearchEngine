@@ -19,13 +19,15 @@
 		B452DA0527F696A000889056 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0427F696A000889056 /* Constants.swift */; };
 		B452DA0827F699A500889056 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B452DA0727F699A500889056 /* IQKeyboardManagerSwift */; };
 		B452DA0A27F7388600889056 /* MainViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0927F7388600889056 /* MainViewController+Extensions.swift */; };
-		B452DA0C27F7BB0B00889056 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0B27F7BB0A00889056 /* DataModel.swift */; };
+		B452DA0C27F7BB0B00889056 /* BookMarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0B27F7BB0A00889056 /* BookMarkModel.swift */; };
 		B452DA0E27F7CD1800889056 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0D27F7CD1800889056 /* NetworkService.swift */; };
 		B452DA1027F7CE0B00889056 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA0F27F7CE0B00889056 /* AppError.swift */; };
 		B452DA1227F7D01500889056 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1127F7D01500889056 /* String+Extension.swift */; };
 		B452DA1427F7D49100889056 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1327F7D49100889056 /* MainViewModel.swift */; };
 		B452DA1627F855B200889056 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1527F855B200889056 /* UIViewController+Extension.swift */; };
 		B452DA1827F8B8D800889056 /* BookMarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1727F8B8D800889056 /* BookMarkViewController.swift */; };
+		B452DA1C27F906E800889056 /* BookMarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1B27F906E800889056 /* BookMarkCell.swift */; };
+		B452DA1E27F9F66C00889056 /* PersistenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1D27F9F66B00889056 /* PersistenceStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,13 +43,15 @@
 		B452DA0227F67EA800889056 /* MainViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCoordinator.swift; sourceTree = "<group>"; };
 		B452DA0427F696A000889056 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B452DA0927F7388600889056 /* MainViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Extensions.swift"; sourceTree = "<group>"; };
-		B452DA0B27F7BB0A00889056 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		B452DA0B27F7BB0A00889056 /* BookMarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkModel.swift; sourceTree = "<group>"; };
 		B452DA0D27F7CD1800889056 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B452DA0F27F7CE0B00889056 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		B452DA1127F7D01500889056 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		B452DA1327F7D49100889056 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		B452DA1527F855B200889056 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		B452DA1727F8B8D800889056 /* BookMarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkViewController.swift; sourceTree = "<group>"; };
+		B452DA1B27F906E800889056 /* BookMarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkCell.swift; sourceTree = "<group>"; };
+		B452DA1D27F9F66B00889056 /* PersistenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,7 @@
 				B452DA0F27F7CE0B00889056 /* AppError.swift */,
 				B452DA1127F7D01500889056 /* String+Extension.swift */,
 				B452DA1527F855B200889056 /* UIViewController+Extension.swift */,
+				B452DA1D27F9F66B00889056 /* PersistenceStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -110,9 +115,10 @@
 		B452D9F527F67DB200889056 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B452DA1727F8B8D800889056 /* BookMarkViewController.swift */,
+				B452DA1B27F906E800889056 /* BookMarkCell.swift */,
 				B452D9E427F67D3600889056 /* MainViewController.swift */,
 				B452DA0927F7388600889056 /* MainViewController+Extensions.swift */,
-				B452DA1727F8B8D800889056 /* BookMarkViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -130,7 +136,7 @@
 		B452D9F727F67DC800889056 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B452DA0B27F7BB0A00889056 /* DataModel.swift */,
+				B452DA0B27F7BB0A00889056 /* BookMarkModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -239,8 +245,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B452D9FE27F67E6200889056 /* Coordinator.swift in Sources */,
+				B452DA1C27F906E800889056 /* BookMarkCell.swift in Sources */,
 				B452D9E527F67D3600889056 /* MainViewController.swift in Sources */,
 				B452D9E127F67D3600889056 /* AppDelegate.swift in Sources */,
+				B452DA1E27F9F66C00889056 /* PersistenceStore.swift in Sources */,
 				B452DA0027F67E7800889056 /* MainCoordinator.swift in Sources */,
 				B452DA1627F855B200889056 /* UIViewController+Extension.swift in Sources */,
 				B452DA1227F7D01500889056 /* String+Extension.swift in Sources */,
@@ -252,7 +260,7 @@
 				B452DA1027F7CE0B00889056 /* AppError.swift in Sources */,
 				B452DA0E27F7CD1800889056 /* NetworkService.swift in Sources */,
 				B452DA1827F8B8D800889056 /* BookMarkViewController.swift in Sources */,
-				B452DA0C27F7BB0B00889056 /* DataModel.swift in Sources */,
+				B452DA0C27F7BB0B00889056 /* BookMarkModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
