@@ -15,7 +15,7 @@ extension MainViewController {
         containerView.addSubview(bookMark)
         stackView.addSubview(searchBar)
         contentView.addSubview(webKitView)
-        webKitView.addSubview(imageStackView)
+//        webKitView.addSubview(imageStackView)
         
         configureStackView()
         configureProgressBar()
@@ -26,12 +26,12 @@ extension MainViewController {
         configureBookMark()
         configureScrollView()
         configureWebKitView()
-        configureImageStackView()
+//        configureImageStackView()
         configureContentView()
-        
     }
     
     func modelsToModifyView() {
+        swipeView()
         didPullToRefresh()
         setupEstimatedProgressObserver()
         configureSearchbarController()
@@ -57,6 +57,7 @@ extension MainViewController {
             make.height.equalTo(5)
         })
     }
+    
     func configureBackButton() {
         backButton.snp.makeConstraints({make in
             make.left.top.equalTo(stackView)
@@ -79,7 +80,6 @@ extension MainViewController {
             make.left.equalTo(containerView)
             make.top.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
-//            make.width.equalTo(stackView.snp.height)
         })
     }
     
@@ -126,12 +126,12 @@ extension MainViewController {
         })
     }
     
-    func configureImageStackView() {
-        imageStackView.snp.makeConstraints({make in
-            make.centerY.equalTo(webKitView).offset(-200)
-            make.centerX.equalTo(webKitView)
-        })
-    }
+//    func configureImageStackView() {
+//        imageStackView.snp.makeConstraints({make in
+//            make.centerY.equalTo(webKitView).offset(-200)
+//            make.centerX.equalTo(webKitView)
+//        })
+//    }
     
 }
 
@@ -142,6 +142,12 @@ extension MainViewController: WKNavigationDelegate {
         backButton.isEnabled = webView.canGoBack
         nextButton.isEnabled = webView.canGoForward
         searchBar.text = webView.url?.absoluteString
+        
+        let token = ""
+                let script = "sendToken(\(token))"
+                webKitView.evaluateJavaScript(script) { (result, error) in
+                }
+                    
         UIView.animate(withDuration: 0.33,
                        animations: {
             self.progressView.alpha = 0.0
@@ -155,75 +161,34 @@ extension MainViewController: WKNavigationDelegate {
     func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
         if progressView.isHidden {
             progressView.isHidden = false
+        } else {
+            progressView.isHidden = true
         }
         
         UIView.animate(withDuration: 0.33,
                        animations: {
             self.progressView.alpha = 1.0
         })
+        
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.progressView.isHidden = true
         self.activityIndicator.stopAnimating()
-        displayError(error: error.localizedDescription)
     }
-    
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            if navigationAction.targetFrame == nil {
-                if let url = navigationAction.request.url {
-                    let app = UIApplication.shared
-                    if app.canOpenURL(url) {
-                        app.open(url, options: [:], completionHandler: nil)
-                    }
-                }
-            }
-            decisionHandler(.allow)
-        }
 }
 
 extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let text = searchBar.text?.replacingOccurrences(of: " ", with: ""), !text.isEmpty else {
-            return
-        }
-        
-        let baseString = Constants.SearchString.baseString
-        var url = Constants.SearchString.baseUrl
-        let searchQuery = Constants.SearchString.searchQuery
-        let dotcom = Constants.SearchString.dotCom
-//        let dotorg = Constants.SearchString.dotOrg
-//        let dotnet = Constants.SearchString.dotNet
-        if text.contains(baseString) {
-            url = text
-        } else if
-            (!text.contains(baseString) && text.contains(dotcom)) {
-            url = baseString + text
-        } else if
-            (!text.contains(baseString) && !text.contains(dotcom)) {
-            url = searchQuery+text
-        }
-        self.fetchDataFromWebkit(urlString: url)
+        convertTextInSerachFiledToUrl()
     }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-            //cancel button becomes disabled when search bar isn't first responder, force it back enabled
-            DispatchQueue.main.async {
-                if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
-                    cancelButton.isEnabled = true
+        func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+                DispatchQueue.main.async {
+                    if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+                        cancelButton.isEnabled = false
+                    }
                 }
+                return true
             }
-            return true
-        }
-
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//            self.present(UINavigationController(rootViewController: SearchViewController()), animated: false, completion: nil)
-//        }
-
-    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-       print("link has been added to bookMark successfully")
-        
-    }
     
-   
 }
-

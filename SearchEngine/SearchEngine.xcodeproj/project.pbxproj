@@ -28,6 +28,8 @@
 		B452DA1827F8B8D800889056 /* BookMarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1727F8B8D800889056 /* BookMarkViewController.swift */; };
 		B452DA1C27F906E800889056 /* BookMarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1B27F906E800889056 /* BookMarkCell.swift */; };
 		B452DA1E27F9F66C00889056 /* PersistenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA1D27F9F66B00889056 /* PersistenceStore.swift */; };
+		B452DA2227FA712100889056 /* ViewBookMarkedItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452DA2127FA712100889056 /* ViewBookMarkedItemController.swift */; };
+		B46D82A727FB0CA40037C601 /* BookMarkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46D82A627FB0CA40037C601 /* BookMarkCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		B452DA1727F8B8D800889056 /* BookMarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkViewController.swift; sourceTree = "<group>"; };
 		B452DA1B27F906E800889056 /* BookMarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkCell.swift; sourceTree = "<group>"; };
 		B452DA1D27F9F66B00889056 /* PersistenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
+		B452DA2127FA712100889056 /* ViewBookMarkedItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBookMarkedItemController.swift; sourceTree = "<group>"; };
+		B46D82A627FB0CA40037C601 /* BookMarkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,7 @@
 				B452DA1B27F906E800889056 /* BookMarkCell.swift */,
 				B452D9E427F67D3600889056 /* MainViewController.swift */,
 				B452DA0927F7388600889056 /* MainViewController+Extensions.swift */,
+				B452DA2127FA712100889056 /* ViewBookMarkedItemController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				B452DA0227F67EA800889056 /* MainViewCoordinator.swift */,
+				B46D82A627FB0CA40037C601 /* BookMarkCoordinator.swift */,
 			);
 			path = ChildCoordinator;
 			sourceTree = "<group>";
@@ -245,6 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B452D9FE27F67E6200889056 /* Coordinator.swift in Sources */,
+				B452DA2227FA712100889056 /* ViewBookMarkedItemController.swift in Sources */,
 				B452DA1C27F906E800889056 /* BookMarkCell.swift in Sources */,
 				B452D9E527F67D3600889056 /* MainViewController.swift in Sources */,
 				B452D9E127F67D3600889056 /* AppDelegate.swift in Sources */,
@@ -255,6 +262,7 @@
 				B452DA1427F7D49100889056 /* MainViewModel.swift in Sources */,
 				B452DA0527F696A000889056 /* Constants.swift in Sources */,
 				B452DA0A27F7388600889056 /* MainViewController+Extensions.swift in Sources */,
+				B46D82A727FB0CA40037C601 /* BookMarkCoordinator.swift in Sources */,
 				B452DA0327F67EA800889056 /* MainViewCoordinator.swift in Sources */,
 				B452D9E327F67D3600889056 /* SceneDelegate.swift in Sources */,
 				B452DA1027F7CE0B00889056 /* AppError.swift in Sources */,

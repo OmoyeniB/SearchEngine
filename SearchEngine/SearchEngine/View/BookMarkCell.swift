@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import WebKit
 
 class BookmarkTableCell: UITableViewCell {
  
@@ -8,6 +9,7 @@ class BookmarkTableCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureLink()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -17,13 +19,8 @@ class BookmarkTableCell: UITableViewCell {
     lazy var bookmarkLink: UILabel = {
        var link = UILabel()
         link.text = "saved link"
-//        link.numberOfLines = 1
        return link
     }()
-    
-    func configureView() {
-       
-    }
     
     func configureLink() {
         contentView.addSubview(bookmarkLink)

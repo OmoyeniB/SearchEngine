@@ -2,28 +2,24 @@ import UIKit
 import WebKit
 import SnapKit
 
-class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate  {
+class MainViewController: UIViewController {
     
-    lazy var progressView = UIProgressView(progressViewStyle: .default)
     private var estimatedProgressObserver: NSKeyValueObservation?
-    let searchBar = UISearchBar()
+    lazy var progressView = UIProgressView(progressViewStyle: .default)
+   
     var savedBookmarks: [String] = []
-    
-//    func addBookmarks() {
-//        print("bookmarked")
-//    }
+    var listAllBoookmarks = UserDefaults.standard.array(forKey: "allbookmarks") as? [String] ?? []
+    let searchBar = UISearchBar()
     
     override func loadView() {
         super.loadView()
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadBookmarks()
         configureView()
         modelsToModifyView()
-    
+        print(listAllBoookmarks.count, "BookMarks listed")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -32,61 +28,96 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
         self.activityIndicator.stopAnimating()
     }
     
-    lazy var image: UIImageView = {
-        var image = UIImageView()
-        image.image = UIImage(named: "pip.fill")
-        return image
-    }()
+  public func convertTextInSerachFiledToUrl() {
+       
+        guard let text = searchBar.text?.replacingOccurrences(of: " ", with: ""), !text.isEmpty else {
+            return
+        }
+        
+        let baseString = Constants.SearchString.baseString
+        var url = Constants.SearchString.baseUrl
+        let searchQuery = Constants.SearchString.searchQuery
+        let dotcom = Constants.SearchString.dotCom
+        if text.contains(baseString) {
+            url = text
+        } else if
+            (!text.contains(baseString) && text.contains(dotcom)) {
+            url = baseString + text
+        } else if
+            (!text.contains(baseString) && !text.contains(dotcom)) {
+            url = searchQuery+text
+        }
+        self.fetchDataFromWebkit(urlString: url)
+        
+        var urlRequest = URLRequest(url: URL(string: url)!)
+        urlRequest.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: urlRequest){ data, response, error in
+
+            guard error == nil else {
+                DispatchQueue.main.async {
+                    self.displayError(error: error?.localizedDescription ?? error.debugDescription)
+                    self.progressView.isHidden = true
+                }
+                return
+            }
+            
+            guard let content = data else {
+                self.progressView.isHidden = true
+                return
+            }
+
+            guard ((try? JSONSerialization.jsonObject(with: content, options: JSONSerialization.ReadingOptions.mutableContainers)) as? [String: Any]) != nil else {
+                return
+            }
+        }
+        task.resume()
+      }
+    
+    func swipeView() {
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftHandleSwipes(_:)))
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action:#selector(rightHandleSwipes(_:)))
+        leftSwipe.direction = .left
+        rightSwipe.direction = .right
+        view.addGestureRecognizer(leftSwipe)
+        view.addGestureRecognizer(rightSwipe)
+    }
+    
+    @objc func leftHandleSwipes(_ sender:UISwipeGestureRecognizer) {
+        if (sender.direction == .left) {
+            webKitView.goForward()
+        }
+    }
+    
+    @objc func rightHandleSwipes(_ sender: UISwipeGestureRecognizer) {
+        if (sender.direction == .right) {
+            webKitView.goBack()
+        }
+    }
     
     func createToolBarItems() {
         
-        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(bookMarkButtonCliked))
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: webKitView, action: #selector(userContentController(_:didReceive:)))
+        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(openBookMarkedItem))
         let spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(clickedToRefresh))
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancleButtonTapped))
         
-        toolbarItems = [bookMarkButton, spacerButton, shareButton, spacerButton, refreshButton, spacerButton, cancelButton]
+        toolbarItems = [bookMarkButton, spacerButton, refreshButton, spacerButton, cancelButton]
         navigationController?.isToolbarHidden = false
     }
     
     @objc func cancleButtonTapped() {
-       navigationController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    @objc func bookMarkButtonCliked() {
-        if let text = searchBar.searchTextField.text {
-            if !savedBookmarks.contains(text) && text.count > 0{
-                savedBookmarks.append(text)
-            }
-            
-        }
-        UserDefaults.standard.set(savedBookmarks, forKey: "bookmark")
-
+    @objc func openBookMarkedItem() {
         let bookmark = BookMarkViewController()
         let navigationController = UINavigationController(rootViewController: bookmark)
         self.present(navigationController, animated: true, completion: nil)
     }
     
-    func loadBookmarks() {
-        if let bookmarks = UserDefaults.standard.object(forKey: "bookmark") as? [String] {
-            savedBookmarks = bookmarks
-        }
-    }
-    
-    @objc func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        let dict = message.body as! [String:AnyObject]
-        let username = dict["username"] as! String
-        let secretToken = dict["secretToken"] as! String
-        
-        let av = UIActivityViewController(activityItems: [username, secretToken], applicationActivities: nil)
-        self.present(av, animated: true, completion: nil)
-    }
-    
     private func setupProgressView() {
         guard let navigationBar = navigationController?.navigationBar else { return }
         progressView.isHidden = true
-        
         navigationBar.addSubview(progressView)
         progressView.snp.makeConstraints{ make in
             make.bottom.left.right.equalTo(navigationBar)
@@ -112,19 +143,19 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
         var backButton = UIButton()
         backButton.setTitle("Back", for: .normal)
         backButton.setTitleColor(.systemBlue, for: .normal)
-        backButton.isEnabled = false
+        backButton.isEnabled = true
         backButton.addTarget(self, action: #selector(backButtonClicked), for: .touchUpInside)
         return backButton
     }()
     
     lazy var containerView: UIView = {
         var containerView = UIView()
-       return containerView
+        return containerView
     }()
     
     lazy var bookMark: UIButton = {
         var bookMark = UIButton()
-        bookMark.setImage(UIImage(systemName: "book"), for: .normal)
+        bookMark.setImage(Constants.Images.bookMark, for: .normal)
         bookMark.addTarget(self, action: #selector(clickToAddToBookmark), for: .touchUpInside)
         return bookMark
     }()
@@ -139,7 +170,21 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
     }()
     
     @objc func clickToAddToBookmark() {
-        print("added to bookmark")
+        
+        guard let text = searchBar.searchTextField.text else {return}
+        if !listAllBoookmarks.contains(text) {
+            listAllBoookmarks.append(text)
+        }
+        UserDefaults.standard.set(listAllBoookmarks, forKey: "allbookmarks")
+        
+        
+//        if let text = searchBar.searchTextField.text {
+//            if !savedBookmarks.contains(text) && text.count > 0{
+//                savedBookmarks.append(text)
+//            }
+//        }
+//        UserDefaults.standard.set(savedBookmarks, forKey: "bookmark")
+//
     }
     
     func configureSearchbarController() {
@@ -148,19 +193,12 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
         searchBar.autocapitalizationType = .none
         searchBar.autocorrectionType = .no
         searchBar.placeholder = Constants.MainViewStrings.searchBarplaceholder
-        searchBar.showsCancelButton = false
+        
         searchBar.delegate = self
         searchBar.becomeFirstResponder()
-//        searchBar.showsBookmarkButton = true
-//        searchBar.searchTextField.clearButtonMode = .never
         searchBar.isTranslucent = true
-        
     }
     
-    lazy var imageStackView: UIStackView = {
-        var imageStackView = UIStackView()
-        return imageStackView
-    }()
     lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.autoresizingMask = .flexibleHeight
@@ -182,16 +220,10 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
     }()
     
     lazy var webKitView: WKWebView = {
+        let preference = WKWebpagePreferences()
         var webKitView = WKWebView()
-        let prefrence = WKWebpagePreferences()
-        let userContentController = WKUserContentController()
-        prefrence.allowsContentJavaScript = true
-        let configuration = WKWebViewConfiguration()
-        configuration.userContentController = userContentController
-        configuration.defaultWebpagePreferences = prefrence
-        userContentController.add(self, name: "userLogin")
-        webKitView.uiDelegate = self
-        
+        let webViewConfiguration = WKWebViewConfiguration()
+        webViewConfiguration.defaultWebpagePreferences = preference
         webKitView.addSubview(activityIndicator)
         webKitView.allowsBackForwardNavigationGestures = true
         webKitView.allowsLinkPreview = true
@@ -200,6 +232,7 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
         self.activityIndicator.hidesWhenStopped = true
         return webKitView
     }()
+    
     
     @objc func backButtonClicked() {
         if webKitView.canGoBack {
@@ -220,12 +253,12 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
     }
     
     @objc func clickedToRefresh() {
-        webKitView.reload()
+       convertTextInSerachFiledToUrl()
     }
     
     @objc func reloadWebView(_ sender: UIRefreshControl) {
         sender.beginRefreshing()
-        self.webKitView.reload()
+        convertTextInSerachFiledToUrl()
         self.refreshDidStop(sender)
     }
     
@@ -242,7 +275,5 @@ class MainViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate
         webKitView.load(URLRequest(url: url))
     }
     
-        
-    }
     
-
+}
