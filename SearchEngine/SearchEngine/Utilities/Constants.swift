@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum Constants {
     
@@ -21,5 +22,9 @@ enum Constants {
         static let networkOutOfCoverage = "Oops!.. something went wrong. Please check your connection and try again"
     }
     
+    enum Images {
+        static let bookMark = UIImage(systemName: "book")
+        
+    }
     
 }
