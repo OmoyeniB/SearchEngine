@@ -12,7 +12,7 @@ extension MainViewController {
         stackView.addSubview(backButton)
         stackView.addSubview(containerView)
         containerView.addSubview(nextButton)
-        containerView.addSubview(bookMarkButton)
+        containerView.addSubview(topBookMarkButton)
         stackView.addSubview(searchBar)
         contentView.addSubview(webKitView)
         webKitView.addSubview(displayImage)
@@ -76,7 +76,7 @@ extension MainViewController {
     }
     
     func configureBookMark() {
-        bookMarkButton.snp.makeConstraints({ make in
+        topBookMarkButton.snp.makeConstraints({ make in
             make.left.equalTo(containerView)
             make.top.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
@@ -86,7 +86,7 @@ extension MainViewController {
     func configureNextButton() {
         nextButton.snp.makeConstraints({make in
             make.top.equalTo(containerView)
-            make.left.equalTo(bookMarkButton.snp.right).offset(5)
+            make.left.equalTo(topBookMarkButton.snp.right).offset(10)
             make.right.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
         })
@@ -102,7 +102,7 @@ extension MainViewController {
     
     func configureScrollView() {
         scrollView.snp.makeConstraints({ make in
-            make.top.equalTo(progressView.snp.bottom).offset(5)
+            make.top.equalTo(progressView.snp.bottom).offset(10)
             make.left.equalTo(view).offset(20)
             make.right.equalTo(view).inset(20)
             make.bottom.equalTo(view.safeAreaLayoutGuide)

@@ -10,23 +10,29 @@ extension MainViewController: WKNavigationDelegate {
         let blueColor = UIColor.systemBlue
         if  backButton.isEnabled == webView.canGoBack {
             backButton.setTitleColor(blueColor, for: .normal)
-        }
-        else {
+        } else {
             backButton.setTitleColor(grayColor, for: .normal)
             backButton.isEnabled = true
         }
         
         if nextButton.isEnabled == webView.canGoForward {
             nextButton.setTitleColor(blueColor, for: .normal)
-        }
-        else {
+        } else {
             nextButton.setTitleColor(grayColor, for: .normal)
             nextButton.isEnabled = true
         }
+        
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.activityIndicator.stopAnimating()
+        
+        if topBookMarkButton.isHeld == true {
+            topBookMarkButton.tintColor = .blue
+        }
+        else {
+            topBookMarkButton.tintColor = .systemGray
+        }
         
         UIView.animate(withDuration: 0.33,
                        animations: {
