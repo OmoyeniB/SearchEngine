@@ -7,7 +7,7 @@ class MainViewController: UIViewController {
     var url = Constants.SearchString.baseUrl
     private var estimatedProgressObserver: NSKeyValueObservation?
     lazy var progressView = UIProgressView(progressViewStyle: .default)
-    var listAllBoookmarks = UserDefaults.standard.array(forKey: "allbookmarks") as? [String] ?? []
+    var listAllBoookmarks = UserDefaults.standard.array(forKey: Constants.UserdefaultKey.allbookmark) as? [String] ?? []
     
     override func loadView() {
         super.loadView()
@@ -58,10 +58,11 @@ class MainViewController: UIViewController {
         return containerView
     }()
     
-    lazy var bookMarkButton: UIButton = {
+    lazy var topBookMarkButton: UIButton = {
         var bookMark = UIButton()
         bookMark.setImage(Constants.Images.bookMark, for: .normal)
         bookMark.addTarget(self, action: #selector(clickToAddToBookmark(_:)), for: .touchUpInside)
+        bookMark.tintColor = .gray
         return bookMark
     }()
     
@@ -258,7 +259,7 @@ class MainViewController: UIViewController {
         if !listAllBoookmarks.contains(text) && text.count > 0 && text.contains("https://") && text.contains(".") {
             listAllBoookmarks.append(text)
         }
-        UserDefaults.standard.set(listAllBoookmarks, forKey: "allbookmarks")
+        UserDefaults.standard.set(listAllBoookmarks, forKey: Constants.UserdefaultKey.allbookmark)
     }
     
     func didPullToRefresh() {

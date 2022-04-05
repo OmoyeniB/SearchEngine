@@ -3,7 +3,7 @@ import UIKit
 class BookMarkViewController: UIViewController {
     
     var didCompleteBookmark: CoordinatorTransition?
-    var arrayOfBookmarks = UserDefaults.standard.array(forKey: "allbookmarks") as? [String] ?? []
+    var arrayOfBookmarks = UserDefaults.standard.array(forKey: Constants.UserdefaultKey.allbookmark) as? [String] ?? []
     var linkToMainViewController: MainViewController?
     var bookmarks: [String] = []
     let bookMarkCell = BookmarkTableCell()
@@ -43,7 +43,7 @@ class BookMarkViewController: UIViewController {
     }
     
     func deleteBookmarkFromList() {
-        UserDefaults.standard.set(arrayOfBookmarks, forKey: "allbookmarks")
+        UserDefaults.standard.set(arrayOfBookmarks, forKey: Constants.UserdefaultKey.allbookmark)
     }
     
     func createTabBar() {
