@@ -44,11 +44,7 @@ class ViewBookMarkedItem: UIViewController {
     }()
     
     lazy var webView: WKWebView = {
-        let preference = WKWebpagePreferences()
-        let configuration = WKWebViewConfiguration()
-        preference.allowsContentJavaScript = true
-        var webView = WKWebView(frame: .zero, configuration: configuration)
-        configuration.defaultWebpagePreferences = preference
+        var webView = WKWebView()
         webView.navigationDelegate = self
         self.activityIndicator.startAnimating()
         self.activityIndicator.hidesWhenStopped = true

@@ -98,10 +98,7 @@ class MainViewController: UIViewController {
     }()
     
     lazy var webKitView: WKWebView = {
-        let preference = WKWebpagePreferences()
         var webKitView = WKWebView()
-        let webViewConfiguration = WKWebViewConfiguration()
-        webViewConfiguration.defaultWebpagePreferences = preference
         webKitView.addSubview(activityIndicator)
         webKitView.allowsBackForwardNavigationGestures = true
         webKitView.allowsLinkPreview = true

@@ -27,7 +27,7 @@ extension MainViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.activityIndicator.stopAnimating()
         
-        if topBookMarkButton.isHeld == true {
+        if topBookMarkButton.isHighlighted == true {
             topBookMarkButton.tintColor = .blue
         }
         else {
