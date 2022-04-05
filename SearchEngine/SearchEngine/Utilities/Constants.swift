@@ -4,6 +4,7 @@ import UIKit
 enum Constants {
     
     enum SearchString {
+        static let arrayOfbase = [".com", ".org", ".net"]
         static let baseUrl = ""
         static let baseString = "https://"
         static let searchQuery = "https://www.google.com/search?q="
@@ -12,8 +13,9 @@ enum Constants {
         static let dotNet = ".net"
     }
     
-    enum MainViewStrings {
+    enum ViewStrings {
         static let searchBarplaceholder = "Type here to search..."
+        static let bookMarkTitle = "Bookmark"
     }
     
     enum PopUpAlertString {
@@ -24,7 +26,6 @@ enum Constants {
     
     enum Images {
         static let bookMark = UIImage(systemName: "book")
-        
     }
     
 }
