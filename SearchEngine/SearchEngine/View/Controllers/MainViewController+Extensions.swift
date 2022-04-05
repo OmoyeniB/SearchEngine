@@ -59,7 +59,6 @@ extension MainViewController {
     func configureBackButton() {
         backButton.snp.makeConstraints({make in
             make.left.top.equalTo(stackView)
-            make.width.equalTo(40)
             make.height.equalTo(stackView.snp.height)
         })
     }
@@ -67,7 +66,7 @@ extension MainViewController {
     func configureContainerView() {
         containerView.snp.makeConstraints({make in
             make.top.equalTo(stackView)
-            make.left.equalTo(searchBar.snp.right).offset(20)
+            make.left.equalTo(searchBar.snp.right).offset(10)
             make.right.equalTo(stackView).inset(10)
             make.height.equalTo(stackView.snp.height)
         })
@@ -84,7 +83,7 @@ extension MainViewController {
     func configureNextButton() {
         nextButton.snp.makeConstraints({make in
             make.top.equalTo(containerView)
-            make.left.equalTo(topBookMarkButton.snp.right).offset(10)
+            make.left.equalTo(topBookMarkButton.snp.right).offset(5)
             make.right.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
         })
@@ -128,7 +127,7 @@ extension MainViewController {
             make.top.equalTo(webKitView)
             make.left.equalTo(webKitView).offset(20)
             make.right.equalTo(webKitView).inset(20)
-            make.height.equalTo(300)
+            make.height.equalTo(250)
         }
     }
 
