@@ -4,7 +4,7 @@ final class MainViewCoordinator: Coordinator {
     
     private let navigationController: UINavigationController
     
-    var navigateToDetailView: ((String) -> Void)?
+    var naviagteToBookMarkedItem: (() -> Void)?
     var rootViewController: UIViewController {
         navigationController
     }
@@ -21,6 +21,31 @@ final class MainViewCoordinator: Coordinator {
     
     func navigateToMainView() {
         let mainViewController = MainViewController()
+        mainViewController.navigateToBookmarkedItem = { [weak self] in
+            self?.navigateToBookMarkView()
+        }
         navigationController.pushViewController(mainViewController, animated: true)
+    }
+    
+    func navigateToBookMarkView() {
+        let bookmarkController = BookMarkViewController()
+//        bookmarkController.didAddToBookmark = { [weak self] in
+//            self?.naviagteToBookMarkedItem?()
+//            }
+        bookmarkController.navigateToBookmarkItem = {url in
+            self.navigateToViewBookMarkedItem(url: url)
+            
+        }
+        navigationController.pushViewController(bookmarkController, animated: true)
+        }
+        
+    
+
+    
+    func navigateToViewBookMarkedItem(url: URLRequest) {
+        let bookMarkedItemController = ViewBookMarkedItem()
+        bookMarkedItemController.webView.load(url)
+        navigationController.pushViewController(bookMarkedItemController, animated: true)
+     
     }
 }

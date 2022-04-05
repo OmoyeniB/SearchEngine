@@ -12,11 +12,6 @@ final class BookmarksCoordinator: Coordinator {
     }
 
     func loadBookmarks() {
-
+//     let book
     }
-//    func showNewsDetail(article: Article) {
-//        let newsDetailsController = NewsDetailsViewController.instantiate()
-//        newsDetailsController.article = article
-//        navigationController.pushViewController(newsDetailsController, animated: true)
-//    }
 }

@@ -30,4 +30,8 @@ class BookmarkTableCell: UITableViewCell {
             make.right.equalTo(contentView).inset(20)
         })
     }
+    
+    func setUpView() {
+        
+    }
 }
