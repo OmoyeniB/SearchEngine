@@ -5,7 +5,7 @@
 - click the bookmark button in the navigationContoller to bookmark a link
 - click the bookMarkImage on the tabBar to view bookmark
 - click on the book mark link to view what has been bookmarked
-- swipe left to delete from bookmark
+- swipe right to delete from bookmark
 - user can click on the refresh button or drag down the view to refresh
 # Features implemented:
 - bookMarks
