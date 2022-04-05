@@ -31,4 +31,8 @@ enum Constants {
         static let filledBookmark = UIImage(systemName: "book.fill")
     }
     
+    enum UserdefaultKey {
+        static let allbookmark = "allbookmarks"
+    }
+    
 }
