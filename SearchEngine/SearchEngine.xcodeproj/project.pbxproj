@@ -29,7 +29,18 @@
 		B46D82AF27FBAE880037C601 /* ViewBookMarkItem+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46D82AE27FBAE880037C601 /* ViewBookMarkItem+Delegate.swift */; };
 		B46D82B227FBAFAD0037C601 /* BookMarkViewControllers+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46D82B127FBAFAD0037C601 /* BookMarkViewControllers+Delegates.swift */; };
 		B46D82B627FBE5070037C601 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46D82B527FBE5070037C601 /* UIView+Extensions.swift */; };
+		B46D82C227FCA5DF0037C601 /* SearchEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46D82C127FCA5DF0037C601 /* SearchEngineTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B46D82C327FCA5DF0037C601 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B452D9D527F67D3600889056 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B452D9DC27F67D3600889056;
+			remoteInfo = SearchEngine;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B452D9DD27F67D3600889056 /* SearchEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,6 +65,8 @@
 		B46D82AE27FBAE880037C601 /* ViewBookMarkItem+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewBookMarkItem+Delegate.swift"; sourceTree = "<group>"; };
 		B46D82B127FBAFAD0037C601 /* BookMarkViewControllers+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookMarkViewControllers+Delegates.swift"; sourceTree = "<group>"; };
 		B46D82B527FBE5070037C601 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		B46D82BF27FCA5DF0037C601 /* SearchEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SearchEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B46D82C127FCA5DF0037C601 /* SearchEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +79,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B46D82BC27FCA5DF0037C601 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -73,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				B452D9DF27F67D3600889056 /* SearchEngine */,
+				B46D82C027FCA5DF0037C601 /* SearchEngineTests */,
 				B452D9DE27F67D3600889056 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				B452D9DD27F67D3600889056 /* SearchEngine.app */,
+				B46D82BF27FCA5DF0037C601 /* SearchEngineTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +199,14 @@
 			path = ViewCell;
 			sourceTree = "<group>";
 		};
+		B46D82C027FCA5DF0037C601 /* SearchEngineTests */ = {
+			isa = PBXGroup;
+			children = (
+				B46D82C127FCA5DF0037C601 /* SearchEngineTests.swift */,
+			);
+			path = SearchEngineTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -201,6 +231,24 @@
 			productReference = B452D9DD27F67D3600889056 /* SearchEngine.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B46D82BE27FCA5DF0037C601 /* SearchEngineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B46D82C527FCA5DF0037C601 /* Build configuration list for PBXNativeTarget "SearchEngineTests" */;
+			buildPhases = (
+				B46D82BB27FCA5DF0037C601 /* Sources */,
+				B46D82BC27FCA5DF0037C601 /* Frameworks */,
+				B46D82BD27FCA5DF0037C601 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B46D82C427FCA5DF0037C601 /* PBXTargetDependency */,
+			);
+			name = SearchEngineTests;
+			productName = SearchEngineTests;
+			productReference = B46D82BF27FCA5DF0037C601 /* SearchEngineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -213,6 +261,10 @@
 				TargetAttributes = {
 					B452D9DC27F67D3600889056 = {
 						CreatedOnToolsVersion = 13.2.1;
+					};
+					B46D82BE27FCA5DF0037C601 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = B452D9DC27F67D3600889056;
 					};
 				};
 			};
@@ -234,6 +286,7 @@
 			projectRoot = "";
 			targets = (
 				B452D9DC27F67D3600889056 /* SearchEngine */,
+				B46D82BE27FCA5DF0037C601 /* SearchEngineTests */,
 			);
 		};
 /* End PBXProject section */
@@ -245,6 +298,13 @@
 			files = (
 				B452D9ED27F67D3800889056 /* LaunchScreen.storyboard in Resources */,
 				B452D9EA27F67D3800889056 /* ImageAsset.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B46D82BD27FCA5DF0037C601 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,7 +336,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B46D82BB27FCA5DF0037C601 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B46D82C227FCA5DF0037C601 /* SearchEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B46D82C427FCA5DF0037C601 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B452D9DC27F67D3600889056 /* SearchEngine */;
+			targetProxy = B46D82C327FCA5DF0037C601 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B452D9EB27F67D3800889056 /* LaunchScreen.storyboard */ = {
@@ -460,6 +536,42 @@
 			};
 			name = Release;
 		};
+		B46D82C627FCA5DF0037C601 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7V7KZH2U8Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Giphy-List.SearchEngineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SearchEngine.app/SearchEngine";
+			};
+			name = Debug;
+		};
+		B46D82C727FCA5DF0037C601 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7V7KZH2U8Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Giphy-List.SearchEngineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SearchEngine.app/SearchEngine";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -477,6 +589,15 @@
 			buildConfigurations = (
 				B452D9F227F67D3800889056 /* Debug */,
 				B452D9F327F67D3800889056 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B46D82C527FCA5DF0037C601 /* Build configuration list for PBXNativeTarget "SearchEngineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B46D82C627FCA5DF0037C601 /* Debug */,
+				B46D82C727FCA5DF0037C601 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
