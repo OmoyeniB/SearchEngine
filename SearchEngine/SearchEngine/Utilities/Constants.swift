@@ -16,6 +16,7 @@ enum Constants {
     enum ViewStrings {
         static let searchBarplaceholder = "Type here to search..."
         static let bookMarkTitle = "Bookmark"
+        static let displayText = "Search App"
     }
     
     enum PopUpAlertString {
@@ -26,6 +27,8 @@ enum Constants {
     
     enum Images {
         static let bookMark = UIImage(systemName: "book")
+        static let displayImage = UIImage(named: "searchImage")
+        static let filledBookmark = UIImage(systemName: "book.fill")
     }
     
 }

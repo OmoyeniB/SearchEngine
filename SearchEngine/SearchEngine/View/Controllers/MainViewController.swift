@@ -58,10 +58,10 @@ class MainViewController: UIViewController {
         return containerView
     }()
     
-    lazy var bookMark: UIButton = {
+    lazy var bookMarkButton: UIButton = {
         var bookMark = UIButton()
         bookMark.setImage(Constants.Images.bookMark, for: .normal)
-        bookMark.addTarget(self, action: #selector(clickToAddToBookmark), for: .touchUpInside)
+        bookMark.addTarget(self, action: #selector(clickToAddToBookmark(_:)), for: .touchUpInside)
         return bookMark
     }()
     
@@ -106,6 +106,24 @@ class MainViewController: UIViewController {
         self.activityIndicator.hidesWhenStopped = true
         return webKitView
     }()
+    
+    lazy var displayImage: UIImageView = {
+        var displayImage = UIImageView()
+        displayImage.image = Constants.Images.displayImage
+        displayImage.contentMode = .scaleToFill
+        displayImage.animateFromTop()
+        return displayImage
+    }()
+    
+    lazy var displayText: UILabel = {
+        var displayText = UILabel()
+        displayText.text = Constants.ViewStrings.displayText
+        displayText.font = UIFont.systemFont(ofSize: 30, weight: .bold)
+        displayText.animateView()
+        return displayText
+    }()
+    
+   
     
     func passTextAsUrlToWebKit(urlString: String) {
         guard let url = URL(string: urlString) else {
@@ -235,7 +253,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    @objc func clickToAddToBookmark() {
+    @objc func clickToAddToBookmark(_ sender: UIButton) {
         guard let text = searchBar.searchTextField.text else { return }
         if !listAllBoookmarks.contains(text) && text.count > 0 && text.contains("https://") && text.contains(".") {
             listAllBoookmarks.append(text)

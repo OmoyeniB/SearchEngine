@@ -12,9 +12,11 @@ extension MainViewController {
         stackView.addSubview(backButton)
         stackView.addSubview(containerView)
         containerView.addSubview(nextButton)
-        containerView.addSubview(bookMark)
+        containerView.addSubview(bookMarkButton)
         stackView.addSubview(searchBar)
         contentView.addSubview(webKitView)
+        webKitView.addSubview(displayImage)
+        webKitView.addSubview(displayText)
         
         configureStackView()
         configureProgressBar()
@@ -26,6 +28,8 @@ extension MainViewController {
         configureScrollView()
         configureWebKitView()
         configureContentView()
+        configureDisplayImage()
+        configureDisplayText()
     }
     
     func modelsToModifyView() {
@@ -72,7 +76,7 @@ extension MainViewController {
     }
     
     func configureBookMark() {
-        bookMark.snp.makeConstraints({ make in
+        bookMarkButton.snp.makeConstraints({ make in
             make.left.equalTo(containerView)
             make.top.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
@@ -82,7 +86,7 @@ extension MainViewController {
     func configureNextButton() {
         nextButton.snp.makeConstraints({make in
             make.top.equalTo(containerView)
-            make.left.equalTo(bookMark.snp.right).offset(5)
+            make.left.equalTo(bookMarkButton.snp.right).offset(5)
             make.right.equalTo(containerView)
             make.height.equalTo(stackView.snp.height)
         })
@@ -121,4 +125,19 @@ extension MainViewController {
         })
     }
     
+    func configureDisplayImage() {
+        displayImage.snp.makeConstraints{ make in
+            make.top.equalTo(webKitView).offset(40)
+            make.leading.equalTo(webKitView).offset(20)
+            make.trailing.equalTo(webKitView).inset(20)
+            make.height.equalTo(300)
+        }
+    }
+    
+    func configureDisplayText() {
+        displayText.snp.makeConstraints({ make in
+            make.top.equalTo(displayImage.snp.bottom).offset(20)
+            make.center.equalTo(webKitView)
+        })
+    }
 }

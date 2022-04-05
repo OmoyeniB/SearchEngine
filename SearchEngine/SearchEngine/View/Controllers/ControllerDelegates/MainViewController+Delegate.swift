@@ -4,12 +4,13 @@ import UIKit
 extension MainViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        
         searchBar.text = webView.url?.absoluteString
         let grayColor = UIColor.systemGray
         let blueColor = UIColor.systemBlue
         if  backButton.isEnabled == webView.canGoBack {
             backButton.setTitleColor(blueColor, for: .normal)
-       }
+        }
         else {
             backButton.setTitleColor(grayColor, for: .normal)
             backButton.isEnabled = true
@@ -54,14 +55,16 @@ extension MainViewController: WKNavigationDelegate {
         self.activityIndicator.stopAnimating()
     }
     
-        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            
-        }
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        
+    }
 }
 
 extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.navigationController?.isToolbarHidden = false
+        displayImage.isHidden = true
+        displayText.isHidden = true
         convertTextInSerachFiledToUrl()
     }
     
