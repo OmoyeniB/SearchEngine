@@ -2,11 +2,9 @@ import UIKit
 
 class BookMarkViewController: UIViewController {
     
-    var didCompleteBookmark: CoordinatorTransition?
+    var viewItemsThatHasBeenBookMarked: ViewBookMarkedItem?
+    var navigateToBookmarkItem: ((URLRequest) -> Void)?
     var arrayOfBookmarks = UserDefaults.standard.array(forKey: Constants.UserdefaultKey.allbookmark) as? [String] ?? []
-    var linkToMainViewController: MainViewController?
-    var bookmarks: [String] = []
-    let bookMarkCell = BookmarkTableCell()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -56,14 +56,23 @@ extension MainViewController: WKNavigationDelegate {
         })
     }
     
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.targetFrame == nil {
+            if let url = navigationAction.request.url {
+                let app = UIApplication.shared
+                if app.canOpenURL(url) {
+                    app.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+        decisionHandler(.allow)
+    }
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.progressView.isHidden = true
         self.activityIndicator.stopAnimating()
     }
     
-    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        
-    }
 }
 
 extension MainViewController: UISearchBarDelegate {

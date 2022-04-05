@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 extension BookMarkViewController: UITableViewDelegate {
     
@@ -10,13 +11,11 @@ extension BookMarkViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = ViewBookMarkedItem()
-        var text = vc.text.text
-        text = arrayOfBookmarks[indexPath.row]
-        guard let url = URL(string: text ?? "") else {return}
-        vc.webView.load(URLRequest(url: url))
         
-        self.navigationController?.pushViewController(vc, animated: true)
+        let text = arrayOfBookmarks[indexPath.row]
+        guard let url = URL(string: text ) else {return}
+        let request = URLRequest(url: url)
+        navigateToBookmarkItem?(request)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

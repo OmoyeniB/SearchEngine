@@ -4,13 +4,14 @@ import SnapKit
 
 class MainViewController: UIViewController {
     
+    var navigateToBookmarkedItem: CoordinatorTransition?
     var url = Constants.SearchString.baseUrl
     private var estimatedProgressObserver: NSKeyValueObservation?
-    lazy var progressView = UIProgressView(progressViewStyle: .default)
     var listAllBoookmarks = UserDefaults.standard.array(forKey: Constants.UserdefaultKey.allbookmark) as? [String] ?? []
     
     override func loadView() {
         super.loadView()
+        view.backgroundColor = .systemBackground
     }
     
     override func viewDidLoad() {
@@ -21,9 +22,10 @@ class MainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
         self.activityIndicator.stopAnimating()
     }
+    
+    lazy var progressView = UIProgressView(progressViewStyle: .default)
     
     lazy var searchBar: UISearchBar = {
         var searchBar = UISearchBar()
@@ -80,6 +82,7 @@ class MainViewController: UIViewController {
         scrollView.bounces = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
         return scrollView
     }()
     
@@ -113,6 +116,7 @@ class MainViewController: UIViewController {
         displayImage.image = Constants.Images.displayImage
         displayImage.contentMode = .scaleToFill
         displayImage.animateFromTop()
+        displayImage.clipsToBounds = true
         return displayImage
     }()
     
@@ -120,11 +124,9 @@ class MainViewController: UIViewController {
         var displayText = UILabel()
         displayText.text = Constants.ViewStrings.displayText
         displayText.font = UIFont.systemFont(ofSize: 30, weight: .bold)
-        displayText.animateView()
+       displayText.animateView()
         return displayText
     }()
-    
-   
     
     func passTextAsUrlToWebKit(urlString: String) {
         guard let url = URL(string: urlString) else {
@@ -134,7 +136,6 @@ class MainViewController: UIViewController {
     }
     
     public func convertTextInSerachFiledToUrl() {
-        
         var isWebPage: Bool = false
         guard let text = searchBar.text?.replacingOccurrences(of: " ", with: ""), !text.isEmpty else {
             return
@@ -159,12 +160,12 @@ class MainViewController: UIViewController {
             if text.first != "." {
                 url = baseString + text
             } else {
-                url = searchQuery+text
+                url = searchQuery + text
             }
             
         } else if
             (!text.contains(baseString) && !text.contains(dotcom)) {
-            url = searchQuery+text
+            url = searchQuery + text
         }
         
         passTextAsUrlToWebKit(urlString: url)
@@ -203,12 +204,11 @@ class MainViewController: UIViewController {
         let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(clickedToRefresh))
         
         toolbarItems = [bookMarkButton, spacerButton, refreshButton]
-        navigationController?.isToolbarHidden = true
+        navigationController?.isToolbarHidden = false
     }
     
     @objc func openBookMarkedItem() {
-        let bookmark = BookMarkViewController()
-        self.navigationController?.pushViewController(bookmark, animated: true)
+      navigateToBookmarkedItem?()
     }
     
     @objc func clickedToRefresh() {
